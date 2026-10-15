@@ -19,7 +19,7 @@ build/
 managed_components/
 sdkconfig
 sdkconfig.old
-/agent_display/preview/
+/firmware-status-display/preview/
 *.dSYM/
 
 # Credentials stay local; main/secrets.example.h is safe to commit

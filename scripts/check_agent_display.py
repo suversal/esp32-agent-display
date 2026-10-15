@@ -5,9 +5,9 @@ import subprocess
 import struct
 import zlib
 root = Path(__file__).resolve().parents[1]
-main = root / "agent_display/main"
-tests = root / "agent_display/tests"
-preview = root / "agent_display/preview"
+main = root / "firmware-status-display/main"
+tests = root / "firmware-status-display/tests"
+preview = root / "firmware-status-display/preview"
 preview.mkdir(exist_ok=True)
 u8g = root / "vendor/waveshare/02_Example/ESP-IDF/11_U8G2_Test/components/u8g2/csrc"
 cjson = root / ".tools/esp-idf/components/json/cJSON"
@@ -92,4 +92,4 @@ render('page-paused',dict(first_page,page=dict(first_page['page'],auto=False)))
 render('page-alert',dict(first_page,alert=snapshot['alert'],page=dict(first_page['page'],waiting=True)))
 render('page-offline',first_page,mode='offline')
 render('page-hold-tick',next_page,age=1)
-print("PROTOCOL_TONE_UI_BUTTON_OK; 17 renderer scenarios, paging/hold/pause/alert/UTF-8/timing/gesture checks; preview: agent_display/preview/cards.png")
+print("PROTOCOL_TONE_UI_BUTTON_OK; 17 renderer scenarios, paging/hold/pause/alert/UTF-8/timing/gesture checks; preview: firmware-status-display/preview/cards.png")

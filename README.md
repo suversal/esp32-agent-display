@@ -6,16 +6,16 @@
 
 ## 测试过哪些固件
 
-这个工作区保留了屏幕测试、语音助手和状态屏的开发过程。本项目的自研固件源码分为 `hello_screen/` 和 `agent_display/` 两个工程。
+这个工作区保留了屏幕测试、语音助手和状态屏的开发过程。本项目的自研固件源码分为 `hello_screen/` 和 `firmware-status-display/` 两个工程。
 
 | 固件 | 用途与测试情况 | 代码或镜像位置 |
 | --- | --- | --- |
-| AI 编程助手状态屏 0.5.0 | 当前正在使用；显示会话、翻页、按键和声音已实机验证 | [agent_display/](agent_display/)，自研源码 |
+| AI 编程助手状态屏 0.5.0 | 当前正在使用；显示会话、翻页、按键和声音已实机验证 | [firmware-status-display/](firmware-status-display/)，自研源码 |
 | HELLO ESP32 屏幕测试 | 显示文字和每秒递增计数；已实机验证 | [hello_screen/](hello_screen/)，自研源码 |
 | 小智 AI 语音助手 v2.4.2 | 此前使用过；配网、唤醒、语音识别、喇叭回答和连续对话已确认 | [官方固件发布页](https://github.com/78/xiaozhi-esp32/releases/tag/v2.4.2)；本机下载目录为 `firmware/xiaozhi-v2.4.2/`，未入库 |
 | 微雪官方出厂程序 | 保存为恢复用途，恢复脚本尚未实机执行 | [官方固件目录](https://github.com/waveshareteam/ESP32-S3-RLCD-4.2/tree/eb1f63427d735a22b9c30e22fa63ebddae1834d3/03_Firmware)；本机镜像目录为 `firmware/waveshare-factory/`，未入库 |
 
-状态屏的 0.1.0～0.5.0 是同一个工程的迭代版本，共用 `agent_display/`。各版改了什么、当时测到了哪一步，以及小智与屏幕测试的操作记录，见 [固件测试与恢复记录](docs/firmware-history.md)。本仓库首次提交已是 0.5.0，旧版没有分别保存为源码目录或发布包。
+状态屏的 0.1.0～0.5.0 是同一个工程的迭代版本，共用 `firmware-status-display/`。各版改了什么、当时测到了哪一步，以及小智与屏幕测试的操作记录，见 [固件测试与恢复记录](docs/firmware-history.md)。本仓库首次提交已是 0.5.0，旧版没有分别保存为源码目录或发布包。
 
 ## 当前状态屏怎么用
 
@@ -42,16 +42,16 @@
 ## 目录说明
 
 ```text
-agent_display/     ESP32 状态屏固件源码，当前为 0.5.0
-agent-display/     Mac 桥接服务、助手 hooks、接入文档与测试
-hello_screen/      最初的文字与计数屏幕测试固件
-scripts/           配置生成、构建、备份、烧录与验证工具
-vendor/waveshare/  固定版本的微雪官方驱动与示例，Git 子模块
-designs/           状态屏 HTML 设计预览
-docs/              固件测试与恢复记录
+firmware-status-display/  ESP32 状态屏固件源码，当前为 0.5.0
+mac-bridge/               Mac 桥接服务、助手 hooks、接入文档与测试
+hello_screen/             最初的文字与计数屏幕测试固件
+scripts/                  配置生成、构建、备份、烧录与验证工具
+vendor/waveshare/         固定版本的微雪官方驱动与示例，Git 子模块
+designs/                  状态屏 HTML 设计预览
+docs/                     固件测试与恢复记录
 ```
 
-`agent-display/` 在 Mac 上运行，不能烧录到设备。`scripts/`、`designs/` 和 `docs/` 是配套工具与资料；`vendor/` 中的上游示例也不代表本项目已逐一测试。
+`mac-bridge/` 在 Mac 上运行，不能烧录到设备。`scripts/`、`designs/` 和 `docs/` 是配套工具与资料；`vendor/` 中的上游示例也不代表本项目已逐一测试。
 
 ## 获取源码与准备环境
 
@@ -70,9 +70,9 @@ git clone --branch v5.5.2 --recursive https://github.com/espressif/esp-idf.git .
 IDF_TOOLS_PATH="$PWD/.tools/idf-tools" bash .tools/esp-idf/install.sh esp32s3
 python3.13 -m venv .tools/serial-venv
 .tools/serial-venv/bin/python -m pip install esptool
-python3.13 -m venv agent-display/.venv
-agent-display/.venv/bin/python -m pip install -r agent-display/bridge/requirements.lock
-agent-display/.venv/bin/python -m pip install --no-deps -e agent-display/bridge
+python3.13 -m venv mac-bridge/.venv
+mac-bridge/.venv/bin/python -m pip install -r mac-bridge/bridge/requirements.lock
+mac-bridge/.venv/bin/python -m pip install --no-deps -e mac-bridge/bridge
 ```
 
 ### 启动 Mac 桥接服务
@@ -80,11 +80,11 @@ agent-display/.venv/bin/python -m pip install --no-deps -e agent-display/bridge
 Mac 和设备需要处于可以互相访问的局域网，设备使用 2.4 GHz Wi-Fi。从仓库根目录执行：
 
 ```sh
-cd agent-display
+cd mac-bridge
 .venv/bin/python -m bridge
 ```
 
-首次启动会生成 `~/.config/agent-display/config.toml` 和随机 token。已经用 launchd 托管服务的机器直接使用现有服务，避免重复启动。助手 hooks 的安装与卸载、会话内容设置和登录自启方式，见 [Mac 桥接服务说明](agent-display/README.md)。
+首次启动会生成 `~/.config/agent-display/config.toml` 和随机 token。已经用 launchd 托管服务的机器直接使用现有服务，避免重复启动。助手 hooks 的安装与卸载、会话内容设置和登录自启方式，见 [Mac 桥接服务说明](mac-bridge/README.md)。
 
 ### 构建当前状态屏
 
@@ -92,29 +92,29 @@ cd agent-display
 
 ```sh
 python3.13 scripts/configure_agent_display.py
-IDF_PROJECT=agent_display bash scripts/idf.sh build
+IDF_PROJECT=firmware-status-display bash scripts/idf.sh build
 ```
 
-也可以复制 `agent_display/main/secrets.example.h` 为同目录的 `secrets.h`，填入自己的 Wi-Fi 和桥接配置。空 SSID 表示尝试复用设备上已有的小智 Wi-Fi 配置。私密头文件不会提交到 Git。
+也可以复制 `firmware-status-display/main/secrets.example.h` 为同目录的 `secrets.h`，填入自己的 Wi-Fi 和桥接配置。空 SSID 表示尝试复用设备上已有的小智 Wi-Fi 配置。私密头文件不会提交到 Git。
 
-构建脚本的默认工程仍为 `hello_screen`，因此构建状态屏时要显式指定 `IDF_PROJECT=agent_display`。只想构建最初的屏幕测试时，使用：
+构建脚本的默认工程仍为 `hello_screen`，因此构建状态屏时要显式指定 `IDF_PROJECT=firmware-status-display`。只想构建最初的屏幕测试时，使用：
 
 ```sh
 IDF_PROJECT=hello_screen bash scripts/idf.sh build
 ```
 
-首次烧录前需要备份设备中将被覆盖的全部区域并核对校验值，再使用对应工程的烧录步骤。状态屏的完整备份、烧录和恢复流程见 [固件说明](agent_display/README.md)；小智与屏幕测试的历史操作见 [测试与恢复记录](docs/firmware-history.md)。Python 路径、串口名称和 launchd 配置中的绝对路径需要按实际机器调整。
+首次烧录前需要备份设备中将被覆盖的全部区域并核对校验值，再使用对应工程的烧录步骤。状态屏的完整备份、烧录和恢复流程见 [固件说明](firmware-status-display/README.md)；小智与屏幕测试的历史操作见 [测试与恢复记录](docs/firmware-history.md)。Python 路径、串口名称和 launchd 配置中的绝对路径需要按实际机器调整。
 
 ## 验证与文件范围
 
-当前代码已通过 96 项桥接测试，以及启用 AddressSanitizer / UndefinedBehaviorSanitizer 的 C 协议、声音、按键测试和 17 种渲染场景。状态屏的横屏显示、联网、自动与手动翻页、暂停/恢复及声音操作有实机记录，具体范围见 [设备端验证记录](agent_display/verification.md)。主机预览和事件样本测试不能代替真实设备、真实助手客户端的验收。
+当前代码已通过 96 项桥接测试，以及启用 AddressSanitizer / UndefinedBehaviorSanitizer 的 C 协议、声音、按键测试和 17 种渲染场景。状态屏的横屏显示、联网、自动与手动翻页、暂停/恢复及声音操作有实机记录，具体范围见 [设备端验证记录](firmware-status-display/verification.md)。主机预览和事件样本测试不能代替真实设备、真实助手客户端的验收。
 
 公开仓库保存源码、文档和依赖版本。`.tools/`、虚拟环境、`build/`、私密头文件、下载固件、设备备份和原始日志均已排除；当前没有预编译发布包。历史记录中引用的 `firmware/`、`backups/` 和 `logs/` 文件只在原开发机保存，克隆仓库不会获得这些文件，恢复自己的设备必须使用自己的备份。
 
 ## 更多资料
 
-- [状态屏固件、引脚与构建说明](agent_display/README.md)
-- [Mac 桥接服务与 hooks](agent-display/README.md)
+- [状态屏固件、引脚与构建说明](firmware-status-display/README.md)
+- [Mac 桥接服务与 hooks](mac-bridge/README.md)
 - [固件测试、版本与恢复记录](docs/firmware-history.md)
 - [微雪板子专用文档](https://docs.waveshare.net/ESP32-S3-RLCD-4.2/ESP-IDF/)
 - [微雪官方代码仓库](https://github.com/waveshareteam/ESP32-S3-RLCD-4.2)

@@ -60,7 +60,7 @@ try:
             raise RuntimeError("Bridge did not stop; refused to start a duplicate.")
         with (root / "logs/agent-display-service.log").open("a") as service_log:
             process = subprocess.Popen(
-                [str(root / "agent-display/.venv/bin/python"), "-m", "bridge"],
+                [str(root / "mac-bridge/.venv/bin/python"), "-m", "bridge"],
                 cwd=root, stdin=subprocess.DEVNULL, stdout=service_log, stderr=subprocess.STDOUT,
                 start_new_session=True)
         reset_seen = False

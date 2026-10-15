@@ -6,7 +6,7 @@
     <string>com.suversal.agent-display</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/Users/sue/Developer/ESP32/agent-display/.venv/bin/python</string>
+        <string>/Users/sue/Developer/ESP32/mac-bridge/.venv/bin/python</string>
         <string>-m</string>
         <string>bridge</string>
         <string>--config</string>

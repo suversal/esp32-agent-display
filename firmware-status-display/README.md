@@ -17,28 +17,30 @@
 显式手动试音：
 
 ~~~sh
-agent-display/.venv/bin/python agent-display/bridge/test_sound.py
+mac-bridge/.venv/bin/python mac-bridge/bridge/test_sound.py
 ~~~
 
 这个本机测试会播放两种声音，即使处于自动夜间静音时段；设备本地静音仍然生效。它不修改静音时段、真实会话或提醒状态，兼容已连接的 0.2.0 / 0.3.0 / 0.4.0 / 0.5.0 设备。
 
 ## 构建与烧录
 
-Mac 桥接服务见 [agent-display/README.md](../agent-display/README.md)。Mac 和设备需要处于可以互相访问的局域网。
+Mac 桥接服务见 [mac-bridge/README.md](../mac-bridge/README.md)。Mac 和设备需要处于可以互相访问的局域网。
 
 ~~~sh
 # 从已有 bridge 配置生成私密头文件，token 和网络地址不会打印。
 /opt/homebrew/bin/python3.13 scripts/configure_agent_display.py
 # 已有私密头文件时，只有显式 --force 才会覆盖。
-IDF_PROJECT=agent_display bash scripts/idf.sh build
+IDF_PROJECT=firmware-status-display bash scripts/idf.sh build
 /opt/homebrew/bin/python3.13 scripts/check_agent_display.py
-.tools/serial-venv/bin/python scripts/backup_project_flash.py --project agent_display
+.tools/serial-venv/bin/python scripts/backup_project_flash.py --project firmware-status-display
 .tools/serial-venv/bin/python scripts/flash_agent_display.py
 .tools/serial-venv/bin/python scripts/observe_agent_display.py --reset --seconds 25
-agent-display/.venv/bin/python agent-display/bridge/simulate.py
+mac-bridge/.venv/bin/python mac-bridge/bridge/simulate.py
 ~~~
 
 `IDF_PROJECT` 默认仍为 `hello_screen`。首次烧录必须有足够覆盖范围、SHA256 校验通过的备份。烧录脚本只允许写 bootloader、分区表和 0x20000 的应用。
+
+固件源码目录已从 `agent_display/` 改为 `firmware-status-display/`。CMake 工程名、NVS 命名空间和恢复备份中的项目标识继续使用 `agent_display`，以兼容现有设备设置与备份。`--project firmware-status-display` 选择新源码目录，生成的备份仍沿用 `before-agent_display-*.json` 命名。
 
 默认从小智 WiFi 管理器的 NVS `wifi` 命名空间读取 `ssid/password`，找不到时检查编号 1–9 的配置，使用第一个有效配置。WiFi 驱动使用 RAM 存储，NVS 初始化失败时不擦除分区。需要手动配网时，在 `main/secrets.h` 中设置 `WIFI_SSID` 和 `WIFI_PASSWORD` 后重新编译；空 SSID 表示复用小智保存的配置。
 
@@ -66,7 +68,7 @@ BOOT 接 GPIO0，运行中短按确认提醒或翻页，按住约 1 秒后松开
 
 预览不证明物理屏幕方向、对比度或按键。编译、Flash 校验、真实联网、实际屏幕和真实助手事件分别记录；Codex/Gemini 模拟状态不代表它们的真实 hook 已验收。
 
-本次实际结果见 [verification.md](verification.md)。当前 bridge 已由 launchd 托管，查看和重启方式见 [launchd 说明](../agent-display/docs/launchd.md)。旧的 check_device_reconnect.py 面向非托管进程，不用于当前服务。
+本次实际结果见 [verification.md](verification.md)。当前 bridge 已由 launchd 托管，查看和重启方式见 [launchd 说明](../mac-bridge/docs/launchd.md)。旧的 check_device_reconnect.py 面向非托管进程，不用于当前服务。
 
 ## 引脚与组件来源
 

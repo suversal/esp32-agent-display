@@ -4,6 +4,8 @@
 
 源配置：[com.suversal.agent-display.plist](../deploy/com.suversal.agent-display.plist)。已安装到 ~/Library/LaunchAgents/com.suversal.agent-display.plist。路径针对当前 Mac，迁移前需调整虚拟环境、配置、工作目录和日志路径。plist 不含 token。
 
+桥接源码目录已从 `agent-display/` 改为 `mac-bridge/`。已有环境更新时，需要在新目录准备虚拟环境，并把 LaunchAgent 的 Python 路径改为 `mac-bridge/.venv/bin/python`；Python 可编辑安装和旧虚拟环境可能包含原绝对路径，不能只移动目录。服务标签、`~/.config/agent-display/`、状态与日志目录、已安装的 `agent-display-hook` 名称继续沿用，现有配置与 hooks 无需改名。
+
 查看状态与主动重启：
 
 ~~~sh

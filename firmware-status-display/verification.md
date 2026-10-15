@@ -44,7 +44,7 @@
 
 桌面版 Codex 内核完成真实只读工具测试，工具退出成功，模型回复 BRIDGE_OK；设备协议的 WebSocket 快照出现 codex/running 与“执行命令”摘要。Gemini 标准事件样本通过真实中继到快照的完整链路，但本机未找到可运行的 Gemini CLI，尚未完成真实客户端验收。桥接回归测试 64 项通过。
 
-详情及验收边界见 ../agent-display/docs/agents/codex.md 和 gemini.md，证据为 logs/agent-display-codex-live.json、logs/agent-display-agents-tests.log。用户观察桌面 [CX] 卡片仍待确认。
+详情及验收边界见 ../mac-bridge/docs/agents/codex.md 和 gemini.md，证据为 logs/agent-display-codex-live.json、logs/agent-display-agents-tests.log。用户观察桌面 [CX] 卡片仍待确认。
 
 
 ## 会话内容固件 0.3.0
@@ -70,7 +70,7 @@
 - 78 项测试通过。重启后已收到 56 个真实工具开始/结束事件；审核事件结构样本经真实 zsh/curl 中继进入服务，保持 running、pending_waits=0、alert=null，声音序号 33→33，测试会话已移除。该样本不代表人工弹窗验收，未额外发送手动试音。
 - 当前 Codex hooks 无法可靠确认人工审批弹窗，因此暂不生成 Codex 急促授权音；正常完成音保留。修复后是否仍有异常响铃尚无新的用户实机反馈。
 
-证据：logs/agent-display-alert-tests.log、logs/agent-display-alert-fix-runtime.json、logs/agent-display-launchd-verification.json。维护与停用命令见 ../agent-display/docs/launchd.md。
+证据：logs/agent-display-alert-tests.log、logs/agent-display-alert-fix-runtime.json、logs/agent-display-launchd-verification.json。维护与停用命令见 ../mac-bridge/docs/launchd.md。
 
 
 ## 浅色阅读界面 0.4.0
@@ -118,3 +118,14 @@
 96 项桥接测试通过，含短任务连续两轮各提醒一次、重复完成不重响、未知耗时、夜间静音，以及真实本机 webhook 到 WebSocket 的短任务提醒往返。本机配置原先没有显式时长门槛，已核对加载后的有效值为 0，无需修改私密配置文件。仅重载 launchd 桥接，真实 fw=0.5.0 设备在 2.06 秒内重连，翻页偏好保留，声音序号 35→35，未补播历史完成提醒。此次没有重新烧录、复位 USB 或追加实机试音；本次实际听音仍待下一次正常完成事件的用户反馈。
 
 证据：logs/agent-display-every-completion-tests.log、logs/agent-display-every-completion-runtime.json。
+
+## 源码目录整理
+
+2026-10-15，固件源码目录改为 `firmware-status-display/`，Mac 桥接服务目录改为 `mac-bridge/`。文档、构建选择、主机验证脚本、私密头文件生成位置和 LaunchAgent 的 Python 路径已同步更新。
+
+- 新目录下完整构建成功，应用仍为 1,589,552 字节。固件主程序、C 测试和桥接状态模块共 30 个文件与改名前逐字节一致；本轮构建产物没有重新烧录到设备。
+- 96 项桥接测试及 ASan/UBSan 下的 17 种渲染场景通过；命令入口和 27 个文档本地链接检查通过。
+- 备份脚本默认选择新固件目录，同时保留 `agent_display` 项目标识与 `before-agent_display-*.json` 文件名。临时目录中的模拟备份可被现有恢复脚本接受；设备调用均由测试替身处理，不代表实机恢复验收。
+- Python 虚拟环境与可编辑安装中的绝对路径已修正。LaunchAgent 迁移时曾短暂加载失败，恢复服务后完成新路径切换；最终仅一个托管进程监听，真实设备重新连接并报告 0.5.0。已安装的 Claude Code 11、Codex 8、Gemini 7 个观察 handler 保留，配置、状态、日志与中继脚本继续使用原标识。
+
+构建与回归日志见 `logs/directory-rename-firmware-build.log`、`logs/directory-rename-bridge-tests.log` 和 `logs/directory-rename-render-tests.log`。旧构建目录、虚拟环境路径修正前的文件和自启配置备份保存在本机 `.tools/directory-rename-*`，不上传到仓库。

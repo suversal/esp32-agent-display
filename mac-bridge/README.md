@@ -1,6 +1,6 @@
-# ESP32 AI 编程助手状态屏
+# Mac 桥接服务与助手 hooks
 
-Mac 桥接服务代码位于现有 ESP32 工作区的 agent-display 目录，使用 Python 3.13 和 aiohttp。独立虚拟环境不修改系统 Python。2026-10-15 已接上真实 ESP32，横屏 400×300 固件见 [agent_display/README.md](../agent_display/README.md)。
+Mac 桥接服务代码位于现有 ESP32 工作区的 mac-bridge 目录，使用 Python 3.13 和 aiohttp。独立虚拟环境不修改系统 Python。2026-10-15 已接上真实 ESP32，横屏 400×300 固件见 [firmware-status-display/README.md](../firmware-status-display/README.md)。
 
 已实现：观察型 hook 中继、标准事件适配、会话状态机、授权关联、乱序缓冲、重启持久化、局域网 WebSocket、提醒确认，以及可备份/合并/卸载的 hooks 安装器。
 

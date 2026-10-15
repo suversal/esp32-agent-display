@@ -12,7 +12,7 @@ def command(*args):
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--config", type=Path, default=Path.home() / ".config/agent-display/config.toml")
-parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parents[1] / "agent_display/main/secrets.h")
+parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parents[1] / "firmware-status-display/main/secrets.h")
 parser.add_argument("--force", action="store_true")
 args = parser.parse_args()
 if args.output.exists() and not args.force:

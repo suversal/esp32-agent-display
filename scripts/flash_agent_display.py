@@ -12,7 +12,7 @@ parser.add_argument("--port", default="/dev/cu.usbmodem1101")
 parser.add_argument("--before", choices=("usb-reset", "no-reset"), default="usb-reset")
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
-build = root / "agent_display/build"
+build = root / "firmware-status-display/build"
 plan = json.loads((build / "flasher_args.json").read_text())
 files = plan["flash_files"]
 if set(files) != {"0x0", "0x8000", "0x20000"}:

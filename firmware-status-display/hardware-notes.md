@@ -21,4 +21,4 @@
 
 播放前清零 DMA；结束后排空 DMA，再静音和关闭 codec、PA 与 TX。实机发现驱动重开已停用的 TX 时仍先调用 disable，因此重开前先启动保持静音的 TX，再交给 codec 配置。
 
-静音保存在 NVS 的 `agent_display/muted`；保留原 `wifi` 命名空间，不擦除 NVS。
+静音保存在 NVS 的 `firmware-status-display/muted`；保留原 `wifi` 命名空间，不擦除 NVS。

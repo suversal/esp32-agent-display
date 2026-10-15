@@ -10,7 +10,7 @@ from esptool.cmds import attach_flash
 from esptool.targets.esp32s3 import ESP32S3ROM
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--project", default="agent_display")
+parser.add_argument("--project", default="firmware-status-display")
 parser.add_argument("--port", default="/dev/cu.usbmodem1101")
 parser.add_argument("--before", choices=("usb-reset", "no-reset"), default="usb-reset")
 args = parser.parse_args()
@@ -28,7 +28,9 @@ if size > capacity:
     raise SystemExit("Flash plan exceeds device capacity.")
 folder = root / "backups"
 folder.mkdir(exist_ok=True)
-output = folder / f"before-{args.project}-{datetime.now():%Y%m%d-%H%M%S}.bin"
+# The on-device project and existing recovery metadata keep their stable identity.
+backup_project = "agent_display" if args.project == "firmware-status-display" else args.project
+output = folder / f"before-{backup_project}-{datetime.now():%Y%m%d-%H%M%S}.bin"
 partial = output.with_suffix(".bin.partial")
 partial.touch(mode=0o600)
 rom = ESP32S3ROM(args.port, baud=115200)
@@ -62,7 +64,7 @@ try:
     nvs_file.touch(mode=0o600)
     nvs_file.write_bytes(nvs)
     record = {
-        "project": args.project, "chip": "esp32s3", "offset": 0,
+        "project": backup_project, "chip": "esp32s3", "offset": 0,
         "backed_up_bytes": size, "written_end": end,
         "flash_files": plan["flash_files"],
         "sha256": hashlib.sha256(output.read_bytes()).hexdigest(),

@@ -2,13 +2,13 @@
 
 [返回项目首页](../README.md)
 
-这里保留 2026-10-14 至 2026-10-15 的开发设备记录。当前状态屏使用方法见 [固件说明](../agent_display/README.md)，更详细的各版验证结果见 [设备端验证记录](../agent_display/verification.md)。
+这里保留 2026-10-14 至 2026-10-15 的开发设备记录。当前状态屏使用方法见 [固件说明](../firmware-status-display/README.md)，更详细的各版验证结果见 [设备端验证记录](../firmware-status-display/verification.md)。
 
 文中命令均从仓库根目录执行。`backups/`、`logs/` 和 `firmware/` 是原开发机的本地文件，未上传到 GitHub；克隆仓库不会获得这些备份、日志或下载镜像。恢复其他设备必须使用对应设备自己的备份。
 
 ## 状态屏版本概览
 
-以下版本均在同一个 `agent_display/` 工程中迭代，并配合 `agent-display/` Mac 桥接服务使用。
+以下版本均在同一个 `firmware-status-display/` 工程中迭代，并配合 `mac-bridge/` Mac 桥接服务使用。
 
 | 固件版本 | 本轮主要变化 |
 | --- | --- |
@@ -26,11 +26,11 @@
 
 2026-10-15 已切换到独立状态屏固件。设备横屏 400×300，已完成烧录校验、原 WiFi 配置复用、mDNS / WebSocket 连接、中文多会话状态与 BOOT 确认提醒的实机验证。用户确认横屏排版正常。
 
-当前固件为 0.5.0，采用白底黑字布局，仓库与会话标题合并，提问和回复自动换行。横屏三张内容卡片，只有一两个会话时自动展开。超过一屏时每 20 秒自动换页，BOOT 短按翻页后停留 60 秒，按住约 1 秒松开暂停/恢复，长按约 2 秒仍切换静音；有提醒时短按优先确认。用户已确认浅色显示清楚，以及“自动换页、短按翻页都正常”。两种声音、音量、静音和恢复声音此前已由用户实机确认。固件说明见 [agent_display/README.md](../agent_display/README.md)，Mac 桥接服务见 [agent-display/README.md](../agent-display/README.md)。温湿度、RTC 和电量尚未接入。
+当前固件为 0.5.0，采用白底黑字布局，仓库与会话标题合并，提问和回复自动换行。横屏三张内容卡片，只有一两个会话时自动展开。超过一屏时每 20 秒自动换页，BOOT 短按翻页后停留 60 秒，按住约 1 秒松开暂停/恢复，长按约 2 秒仍切换静音；有提醒时短按优先确认。用户已确认浅色显示清楚，以及“自动换页、短按翻页都正常”。两种声音、音量、静音和恢复声音此前已由用户实机确认。固件说明见 [firmware-status-display/README.md](../firmware-status-display/README.md)，Mac 桥接服务见 [mac-bridge/README.md](../mac-bridge/README.md)。温湿度、RTC 和电量尚未接入。
 
-Mac 端已追加 Codex 8 和 Gemini 7 个观察 handler，并修复文件摘要及工具事件关联。Codex 桌面版内核完成真实只读工具测试，运行状态与“执行命令”摘要进入设备协议快照；74 项桥接测试通过。Gemini 尚待真实 CLI 验收，桌面旧聊天是否加载新增 hooks 以实际使用反馈为准。详情见 [Codex 接入记录](../agent-display/docs/agents/codex.md)。
+Mac 端已追加 Codex 8 和 Gemini 7 个观察 handler，并修复文件摘要及工具事件关联。Codex 桌面版内核完成真实只读工具测试，运行状态与“执行命令”摘要进入设备协议快照；74 项桥接测试通过。Gemini 尚待真实 CLI 验收，桌面旧聊天是否加载新增 hooks 以实际使用反馈为准。详情见 [Codex 接入记录](../mac-bridge/docs/agents/codex.md)。
 
-桥接已配置登录自启与进程退出后的自动重启，维护方式见 [launchd 说明](../agent-display/docs/launchd.md)。Codex 自动审核被误判为人工授权的问题已修复，旧误报会定向清理。陈旧运行状态改为“状态待更新”，并由较新的 Vibe Island 运行/等待输入信息校正，不再推断“可能已中断”；真实等待与提醒保留。分页已按状态分组，将运行会话放到已完成、空闲会话之前，待处理等待仍优先，同组顺序保持稳定。当前 96 项桥接测试、17 种 C 渲染场景通过，0.5.0 已完成烧录、重连和自动/短按翻页实屏验收。
+桥接已配置登录自启与进程退出后的自动重启，维护方式见 [launchd 说明](../mac-bridge/docs/launchd.md)。Codex 自动审核被误判为人工授权的问题已修复，旧误报会定向清理。陈旧运行状态改为“状态待更新”，并由较新的 Vibe Island 运行/等待输入信息校正，不再推断“可能已中断”；真实等待与提醒保留。分页已按状态分组，将运行会话放到已完成、空闲会话之前，待处理等待仍优先，同组顺序保持稳定。当前 96 项桥接测试、17 种 C 渲染场景通过，0.5.0 已完成烧录、重连和自动/短按翻页实屏验收。
 
 内容固件覆盖范围扩大，小智恢复备份更新为 `backups/xiaozhi-before-status-expanded-20261015-content.json`，对应 1,769,472 字节；原始前缀及新增尾部已验证，包含设备原配置，覆盖 0.5.0 全部写入范围。恢复 0.4.0 使用 `backups/before-agent_display-20261015-204608.json`，恢复 0.3.0 使用 `backups/before-agent_display-20261015-201801.json`，恢复 0.2.0 使用 `backups/before-agent_display-20261015-193059.json`。恢复入口为 `scripts/restore_status_backup.py`，实际恢复操作尚未执行。
 

@@ -20,11 +20,11 @@
 - bridge 74 项测试通过，覆盖缓存归一、脱敏、错误/过期处理、不覆盖原生授权、原生排序、无额外内容持久化、真实中继、HTTP/WebSocket 和新固件试音协议兼容。
 - 同一份 C 协议、字体、界面和音频代码通过 ASan/UBSan 检查，400×300 预览已查看。
 - 应用构建成功，1,586,976 字节。Flash 三段写入均校验通过，没有写入 NVS。
-- 升级前设备备份 1,769,472 字节，逐块 MD5 校验和本地 SHA256 通过；另核对实际 0.2.0 应用哈希并扩展原始小智恢复尾部。当前恢复说明见 agent_display/README.md。
+- 升级前设备备份 1,769,472 字节，逐块 MD5 校验和本地 SHA256 通过；另核对实际 0.2.0 应用哈希并扩展原始小智恢复尾部。当前恢复说明见 firmware-status-display/README.md。
 - 服务端实际收到设备 fw=0.3.0，真实源中三个会话均具备标题、提问/回复与工具字段。
 - 用户随后确认：“这些内容都正常显示了”。三张内容卡片的实机显示通过验收。此项不扩大 Gemini、人工授权与拒绝链路的既有验收范围。
 
-证据：logs/agent-display-content-tests.log、logs/agent-display-content-render.log、logs/agent-display-content-build.log、logs/agent-display-before-content-backup.log、logs/agent-display-content-flash.log。纯示例排版预览为 agent_display/preview/cards.png，未把真实提问或回答保存到预览文件。
+证据：logs/agent-display-content-tests.log、logs/agent-display-content-render.log、logs/agent-display-content-build.log、logs/agent-display-before-content-backup.log、logs/agent-display-content-flash.log。纯示例排版预览为 firmware-status-display/preview/cards.png，未把真实提问或回答保存到预览文件。
 
 
 ## 0.4.0 浅色阅读布局
@@ -41,4 +41,4 @@
 
 照片中的“可能已中断”来自超过 15 分钟没有原生 hook 更新后的推断，并不证明任务中断。现场核对时，同一 ESP32 会话两秒前仍有缓存活动，另两个 Codex 会话的较新缓存为等待输入，但旧 hook 状态遮住了它们。现在缺少新活动时显示“状态待更新”；同一会话有更晚的已知缓存状态时校正陈旧运行状态，真实等待与提醒不受影响。另补充实际观察到的 running_tool 状态，按运行中显示。缓存本身也过期时保留不确定标记。
 
-90 项桥接测试通过，覆盖 128 会话的 43 页、活动更新不打乱页序、20/60 秒定时、独立设备、暂停、删除会话、提醒定位和确认、旧设备兼容，以及陈旧运行状态与较新缓存的取舍。17 种真实 C 渲染场景及共享按键逻辑通过 ASan/UBSan。0.5.0 已烧录校验并重连，物理验收与恢复边界见 ../../agent_display/verification.md。
+90 项桥接测试通过，覆盖 128 会话的 43 页、活动更新不打乱页序、20/60 秒定时、独立设备、暂停、删除会话、提醒定位和确认、旧设备兼容，以及陈旧运行状态与较新缓存的取舍。17 种真实 C 渲染场景及共享按键逻辑通过 ASan/UBSan。0.5.0 已烧录校验并重连，物理验收与恢复边界见 ../../firmware-status-display/verification.md。
