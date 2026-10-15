@@ -1,0 +1,23 @@
+#!/bin/zsh -f
+# Observation only: no decision JSON, no payload in argv, no network wait.
+exec 2>/dev/null
+unsetopt BG_NICE
+agent=$1
+case "$agent" in
+  claude-code|codex|gemini) ;;
+  *) exit 0 ;;
+esac
+zmodload zsh/datetime 2>/dev/null
+ts=$EPOCHREALTIME
+port=$AGENT_DISPLAY_PORT
+if [[ -z "$port" && -r "$0:h/agent-display.port" ]]; then
+  IFS= read -r port < "$0:h/agent-display.port"
+fi
+[[ "$port" == <1-65535> ]] || port=8787
+# Explicit fd redirection lets the detached child consume the original hook stdin.
+/usr/bin/curl --noproxy '*' --silent --connect-timeout 0.2 --max-time 1 \
+  --request POST --header 'Content-Type: application/json' \
+  --header "X-Hook-Ts: $ts" --data-binary @- \
+  "http://127.0.0.1:$port/hook/$agent" <&0 >/dev/null 2>&1 &!
+[[ "$agent" == gemini ]] && print -r -- '{}'
+exit 0
