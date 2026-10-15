@@ -1,8 +1,19 @@
-# ESP32 屏幕与语音助手
+# ESP32 AI 编程助手状态屏
 
 本项目将 AI 编程助手的会话状态、最近提问和回复显示在微雪 ESP32-S3-RLCD-4.2 上，并提供翻页、完成提示音和 BOOT 提醒确认。Mac 上的 Python 桥接服务通过局域网 WebSocket 向设备发送状态；屏幕上的确认只处理提醒，不会批准编程助手的工具操作。
 
-源码包含 `agent_display/` 状态屏固件、`agent-display/` Mac 桥接服务、`hello_screen/` 入门屏幕示例，以及 `scripts/` 构建、备份和烧录工具。Waveshare 官方驱动作为 Git 子模块固定到已验证的版本。
+## 当前设备对应的源码
+
+当前正在使用的状态屏固件为 **0.5.0**，包括白底黑字会话卡片、多会话自动翻页、BOOT 按键操作、静音和任务完成提示音。它需要配合 Mac 桥接服务使用，两部分源码都在本仓库中：
+
+| 部分 | 源码 | 作用 |
+| --- | --- | --- |
+| 烧录到 ESP32 的固件 | [agent_display/](agent_display/) | 显示界面、Wi-Fi/WebSocket、翻页、按键与声音 |
+| Mac 桥接服务与 hooks | [agent-display/](agent-display/) | 收集助手事件、合并会话内容，并向设备发送状态 |
+| 构建与设备工具 | [scripts/](scripts/) | 配置生成、构建、备份、烧录与验证 |
+| 官方屏幕驱动 | [vendor/waveshare](vendor/waveshare) | 固定到已验证版本的 Git 子模块 |
+
+`hello_screen/` 是早期的 `HELLO ESP32!` 屏幕测试示例。下文的小智语音助手和最初屏幕测试是开发历史；当前设备运行的是上表中的状态屏固件。状态屏的具体操作和构建步骤见 [固件说明](agent_display/README.md)，Mac 端配置见 [桥接服务说明](agent-display/README.md)。
 
 ## 获取源码与准备环境
 
